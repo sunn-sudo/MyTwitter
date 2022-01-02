@@ -1,19 +1,29 @@
 package com.example.mytwitter
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.view.WindowManager
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.ArrayAdapter
+import android.widget.Button
 import android.widget.ListView
 import androidx.appcompat.app.AppCompatActivity
+
 
 @Suppress("DEPRECATION")
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        //ボタン制御
+        val sendButton: Button = findViewById<View>(R.id.sendButton) as Button
+        sendButton.setOnClickListener {
+            val intent = Intent(application, SubActivity::class.java)
+            startActivity(intent)
+        }
 
         // ListViewに表示するリスト項目をArrayListで準備する
         val data = ArrayList<Any>()
@@ -34,6 +44,10 @@ class MainActivity : AppCompatActivity() {
         val listView: ListView = findViewById<View>(R.id.listView) as ListView
         listView.setAdapter(adapter)
         //onWebView()
+    }
+
+    private fun setScreenSub() {
+
     }
 
     fun onWebView(){
