@@ -53,11 +53,12 @@ class MainActivity : AppCompatActivity() {
         mUserList = mUserDao.getAll()
         mAdapter.clear()
         mUserList.forEach{ item ->
-            val temp : String = item.id.toString() + ":" + item.accountName.toString()
-            mAdapter.add(temp)
+            //val temp : String = item.id.toString() + ":" + item.accountName.toString()
+            mAdapter.add(item.accountName.toString())
         }
     }
 
+    /*
     private fun deleteUser(twitterAccount : String) {
         val tempList = twitterAccount.split(":")
         val Id = tempList[0]
@@ -72,5 +73,6 @@ class MainActivity : AppCompatActivity() {
             mAdapter.add(temp)
         }
     }
+    */
 }
 
