@@ -13,7 +13,9 @@ class TwitterActivity: AppCompatActivity()  {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_twitter);
         val intent = getIntent()
-        val twitterAccount : String = intent.getStringExtra("twitterAccount").toString()
+        val temp : String = intent.getStringExtra("twitterAccount").toString()
+        val tempList = temp.split(":")
+        val twitterAccount = tempList[1]
         onWebView(twitterAccount)
     }
 

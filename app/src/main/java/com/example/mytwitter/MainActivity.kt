@@ -2,11 +2,7 @@ package com.example.mytwitter
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.KeyEvent
 import android.view.View
-import android.view.WindowManager
-import android.webkit.WebView
-import android.webkit.WebViewClient
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.ListView
@@ -18,7 +14,6 @@ class MainActivity : AppCompatActivity() {
     lateinit var mUserDao: TwitterUserDao
     lateinit var mAdapter: ArrayAdapter<String>
     private var mUserList: List<TwitterUser> = listOf()
-    private val myWebView: WebView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,7 +53,24 @@ class MainActivity : AppCompatActivity() {
         mUserList = mUserDao.getAll()
         mAdapter.clear()
         mUserList.forEach{ item ->
-            mAdapter.add(item.accountName.toString())
+            val temp : String = item.id.toString() + ":" + item.accountName.toString()
+            mAdapter.add(temp)
+        }
+    }
+
+    private fun deleteUser(twitterAccount : String) {
+        val tempList = twitterAccount.split(":")
+        val Id = tempList[0]
+        val deleteAccount = tempList[1]
+        val deleteUser = TwitterUser(Id.toInt(), deleteAccount)
+        mUserDao.delete(deleteUser)
+        // データ再表示
+        mUserList = mUserDao.getAll()
+        mAdapter.clear()
+        mUserList.forEach{ item ->
+            val temp : String = item.id.toString() + ":" + item.accountName.toString()
+            mAdapter.add(temp)
         }
     }
 }
+

@@ -1,5 +1,6 @@
 package com.example.mytwitter
 
+import android.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -32,8 +33,22 @@ class SubActivity : AppCompatActivity() {
         val accountName: String = editText.text.toString()
         if (accountName.isNotBlank()){
             val newUser = TwitterUser(0, accountName)
-            mUserDao.insert(newUser)
-            editText.text = null
+            AlertDialog.Builder(this)
+                    .setTitle("確認")
+                    .setMessage("「$accountName」を登録しますか")
+                    .setPositiveButton("OK") { dialog, which ->
+                        mUserDao.insert(newUser)
+                        editText.text = null
+                    }
+                    .setNegativeButton("No") { dialog, which -> }
+                    .show()
+        } else if (accountName.isBlank()){
+            AlertDialog.Builder(this)
+                .setTitle("確認")
+                .setMessage("アカウント名を入力してください")
+                .setPositiveButton("OK") { dialog, which ->
+                }
+                .show()
         }
     }
 }
