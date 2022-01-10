@@ -3,7 +3,6 @@ package com.example.mytwitter
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.ListView
 import androidx.appcompat.app.AppCompatActivity
@@ -12,7 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 class MainActivity : AppCompatActivity() {
 
     lateinit var mUserDao: TwitterUserDao
-    lateinit var mAdapter: ArrayAdapter<String>
+    lateinit var mAdapter: TwitterListAdapter<TwitterUser>
     private var mUserList: List<TwitterUser> = listOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,49 +29,25 @@ class MainActivity : AppCompatActivity() {
         mUserDao = TwitterUserDatabase.getInstance(this).TwitterUserDao()
 
         // リスト項目とListViewを対応付けるArrayAdapterを用意する
-        mAdapter  = ArrayAdapter(this, android.R.layout.select_dialog_item, arrayListOf())
+        mAdapter  = TwitterListAdapter(this,  arrayListOf<TwitterUser>())
 
         // ListViewにArrayAdapterを設定する
         val listView: ListView = findViewById<View>(R.id.listView) as ListView
         listView.setAdapter(mAdapter)
-
-        listView.setOnItemClickListener{ mAdapter, _, position, _ ->
-            val twitterAccount = mAdapter.getItemAtPosition(position) as String
-            val intent = Intent(application, TwitterActivity::class.java)
-            intent.putExtra("twitterAccount", twitterAccount)
-            startActivity(intent)
-        }
     }
 
     override fun onStart() {
         super.onStart()
         getUser()
+        mAdapter.notifyDataSetChanged()
     }
 
     private fun getUser() {
         mUserList = mUserDao.getAll()
-        mAdapter.clear()
+        mAdapter.ItemList.clear()
         mUserList.forEach{ item ->
-            //val temp : String = item.id.toString() + ":" + item.accountName.toString()
-            mAdapter.add(item.accountName.toString())
+            mAdapter.ItemList.add(TwitterUser(item.id,item.accountName))
         }
     }
-
-    /*
-    private fun deleteUser(twitterAccount : String) {
-        val tempList = twitterAccount.split(":")
-        val Id = tempList[0]
-        val deleteAccount = tempList[1]
-        val deleteUser = TwitterUser(Id.toInt(), deleteAccount)
-        mUserDao.delete(deleteUser)
-        // データ再表示
-        mUserList = mUserDao.getAll()
-        mAdapter.clear()
-        mUserList.forEach{ item ->
-            val temp : String = item.id.toString() + ":" + item.accountName.toString()
-            mAdapter.add(temp)
-        }
-    }
-    */
 }
 
